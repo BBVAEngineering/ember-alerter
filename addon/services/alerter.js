@@ -1,7 +1,6 @@
 import AlertModel from 'ember-alerter/models/alert';
 import Service from '@ember/service';
 import { A, isArray } from '@ember/array';
-import { aliasMethod } from '@ember/object';
 
 /**
  * Service that is used to send alerts through the application.
