@@ -1,30 +1,35 @@
+import { module, test } from 'qunit';
 /* eslint-disable no-magic-numbers */
-import { moduleFor, test } from 'ember-qunit';
+import { setupTest } from 'ember-qunit';
+
+import { run } from '@ember/runloop';
 
 let model;
 
-moduleFor('model:alert', 'Unit | Model | alert', {
-	beforeEach() {
-		model = this.subject();
-	}
-});
+module('Unit | Model | alert', function(hooks) {
+  setupTest(hooks);
 
-test('it is not shown by default', (assert) => {
-	const isShown = model.get('isShown');
+  hooks.beforeEach(function() {
+      model = run(() => this.owner.lookup('service:store').createRecord('alert'));
+  });
 
-	assert.equal(isShown, false);
-});
+  test('it is not shown by default', (assert) => {
+      const isShown = model.get('isShown');
 
-test('it has a duration by default', (assert) => {
-	assert.ok(model.get('duration'));
-});
+      assert.equal(isShown, false);
+  });
 
-test('it is permanent when duration is negative', (assert) => {
-	model.set('duration', 1000);
+  test('it has a duration by default', (assert) => {
+      assert.ok(model.get('duration'));
+  });
 
-	assert.notOk(model.get('isPermanent'));
+  test('it is permanent when duration is negative', (assert) => {
+      model.set('duration', 1000);
 
-	model.set('duration', -1);
+      assert.notOk(model.get('isPermanent'));
 
-	assert.ok(model.get('isPermanent'));
+      model.set('duration', -1);
+
+      assert.ok(model.get('isPermanent'));
+  });
 });

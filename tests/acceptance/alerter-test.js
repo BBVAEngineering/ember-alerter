@@ -1,36 +1,26 @@
+import { find, visit } from '@ember/test-helpers';
 import $ from 'jquery';
-import moduleForAcceptance from '../../tests/helpers/module-for-acceptance';
-import { test } from 'qunit';
+import { module, test } from 'qunit';
 
-moduleForAcceptance('Acceptance | alerter');
+import { setupApplicationTest } from 'ember-qunit';
 
-test('Opening an alert. All types', (assert) => {
-	visit('/');
+module('Acceptance | alerter', function(hooks) {
+  setupApplicationTest(hooks);
 
-	const alrtCont = 'div.alrtCont div[data-id="alertDescription"]';
+  test('Opening an alert. All types', async assert => {
+      await visit('/');
 
-	andThen(() => {
-		$('#openOk').click();
-		assert.equal(find(alrtCont).text(), 'Alert of type ok');
-	});
+      const alrtCont = 'div.alrtCont div[data-id="alertDescription"]';
 
-	andThen(() => {
-		$('#openInfo').click();
-		assert.equal(find(alrtCont).text(), 'Alert of type info');
-	});
-
-	andThen(() => {
-		$('#openAdvise').click();
-		assert.equal(find(alrtCont).text(), 'Alert of type advise');
-	});
-
-	andThen(() => {
-		$('#openWarning').click();
-		assert.equal(find(alrtCont).text(), 'Alert of type warning');
-	});
-
-	andThen(() => {
-		$('#openError').click();
-		assert.equal(find(alrtCont).text(), 'Alert of type error');
-	});
+      $('#openOk').click();
+      assert.dom(alrtCont).hasText('Alert of type ok');
+      $('#openInfo').click();
+      assert.dom(alrtCont).hasText('Alert of type info');
+      $('#openAdvise').click();
+      assert.dom(alrtCont).hasText('Alert of type advise');
+      $('#openWarning').click();
+      assert.dom(alrtCont).hasText('Alert of type warning');
+      $('#openError').click();
+      assert.dom(alrtCont).hasText('Alert of type error');
+  });
 });

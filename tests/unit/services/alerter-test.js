@@ -1,124 +1,126 @@
 import { isEmpty } from '@ember/utils';
 import { run } from '@ember/runloop';
 import Component from '@ember/component';
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 import AlertModel from 'ember-alerter/models/alert';
 
 let service;
 
-moduleFor('service:alerter', 'Unit | Service | alerter', {
-	unit: true,
-	beforeEach() {
-		service = this.subject();
-	}
-});
+module('Unit | Service | alerter', function(hooks) {
+  setupTest(hooks);
 
-test('it has an empty array', (assert) => {
-	const content = service.get('content');
+  hooks.beforeEach(function() {
+      service = this.owner.lookup('service:alerter');
+  });
 
-	assert.ok(isEmpty(content));
-});
+  test('it has an empty array', (assert) => {
+      const content = service.get('content');
 
-test('it add alerts to the array as objects', (assert) => {
-	const alert = { foo: 'bar' };
-	const alerts = [{ bar: 'foo' }];
+      assert.ok(isEmpty(content));
+  });
 
-	service.add(alert);
+  test('it add alerts to the array as objects', (assert) => {
+      const alert = { foo: 'bar' };
+      const alerts = [{ bar: 'foo' }];
 
-	assert.equal(service.get('content.length'), 1);
-	assert.ok(service.get('content.0') instanceof AlertModel);
+      service.add(alert);
 
-	service.add(alerts);
+      assert.equal(service.get('content.length'), 1);
+      assert.ok(service.get('content.0') instanceof AlertModel);
 
-	assert.equal(service.get('content.length'), 2);
-	assert.ok(service.get('content.1') instanceof AlertModel);
-});
+      service.add(alerts);
 
-test('it assign alert with last view when alert is added', function(assert) {
-	this.registry.register('component:dummy-component', Component.extend());
+      assert.equal(service.get('content.length'), 2);
+      assert.ok(service.get('content.1') instanceof AlertModel);
+  });
 
-	let view;
-	const alert = {};
+  test('it assign alert with last view when alert is added', function(assert) {
+      this.owner.register('component:dummy-component', Component.extend());
 
-	run(() => {
-		view = this.container.lookup('component:dummy-component');
-	});
+      let view;
+      const alert = {};
 
-	service.get('views').addObject(view);
+      run(() => {
+          view = this.owner.lookup('component:dummy-component');
+      });
 
-	service.add(alert);
+      service.get('views').addObject(view);
 
-	assert.equal(alert.view, view.elementId);
+      service.add(alert);
 
-	run(() => {
-		this.registry.unregister('component:dummy-component');
-		view.destroy();
-	});
-});
+      assert.equal(alert.view, view.elementId);
 
-test('it clears all alerts', (assert) => {
-	const alerts = [{}, {}, {}];
+      run(() => {
+          this.registry.unregister('component:dummy-component');
+          view.destroy();
+      });
+  });
 
-	service.add(alerts);
+  test('it clears all alerts', (assert) => {
+      const alerts = [{}, {}, {}];
 
-	service.clear();
+      service.add(alerts);
 
-	assert.equal(service.get('content.length'), 0);
-});
+      service.clear();
 
-test('it clears alerts by callback when callback is passed', (assert) => {
-	const callback = (alert) => (alert.foo === 'bar');
-	const alerts = [{ foo: 'bar' }, { foo: 'wow' }];
+      assert.equal(service.get('content.length'), 0);
+  });
 
-	service.add(alerts);
+  test('it clears alerts by callback when callback is passed', (assert) => {
+      const callback = (alert) => (alert.foo === 'bar');
+      const alerts = [{ foo: 'bar' }, { foo: 'wow' }];
 
-	service.clear(callback);
+      service.add(alerts);
 
-	assert.equal(service.get('content.length'), 1);
-	assert.equal(service.get('content.0.foo'), 'wow');
-});
+      service.clear(callback);
 
-test('it clears alerts by key-value when key-value is passed', (assert) => {
-	const alerts = [{ foo: 'bar' }, { foo: 'wow' }];
+      assert.equal(service.get('content.length'), 1);
+      assert.equal(service.get('content.0.foo'), 'wow');
+  });
 
-	service.add(alerts);
+  test('it clears alerts by key-value when key-value is passed', (assert) => {
+      const alerts = [{ foo: 'bar' }, { foo: 'wow' }];
 
-	service.clear('foo', 'bar');
+      service.add(alerts);
 
-	assert.equal(service.get('content.length'), 1);
-	assert.equal(service.get('content.0.foo'), 'wow');
-});
+      service.clear('foo', 'bar');
 
-test('it clears alerts by object when object is passed', (assert) => {
-	const alerts = [{ foo: 'bar' }, { foo: 'wow' }];
+      assert.equal(service.get('content.length'), 1);
+      assert.equal(service.get('content.0.foo'), 'wow');
+  });
 
-	service.add(alerts);
+  test('it clears alerts by object when object is passed', (assert) => {
+      const alerts = [{ foo: 'bar' }, { foo: 'wow' }];
 
-	service.clear(service.get('content.0'));
+      service.add(alerts);
 
-	assert.equal(service.get('content.length'), 1);
-	assert.equal(service.get('content.0.foo'), 'wow');
-});
+      service.clear(service.get('content.0'));
 
-test('it clears alerts by array when array is passed', (assert) => {
-	const alerts = [{ foo: 'bar' }, { foo: 'wow' }];
+      assert.equal(service.get('content.length'), 1);
+      assert.equal(service.get('content.0.foo'), 'wow');
+  });
 
-	service.add(alerts);
+  test('it clears alerts by array when array is passed', (assert) => {
+      const alerts = [{ foo: 'bar' }, { foo: 'wow' }];
 
-	service.clear(service.get('content'));
+      service.add(alerts);
 
-	assert.equal(service.get('content.length'), 0);
-});
+      service.clear(service.get('content'));
 
-test('it sets shown property of alert to false when is true and clear is called', (assert) => {
-	const alerts = { foo: 'bar' };
+      assert.equal(service.get('content.length'), 0);
+  });
 
-	service.add(alerts);
+  test('it sets shown property of alert to false when is true and clear is called', (assert) => {
+      const alerts = { foo: 'bar' };
 
-	service.get('content.0').set('isShown', true);
+      service.add(alerts);
 
-	service.clear();
+      service.get('content.0').set('isShown', true);
 
-	assert.equal(service.get('content.length'), 1);
-	assert.equal(service.get('content.0.isShown'), false);
+      service.clear();
+
+      assert.equal(service.get('content.length'), 1);
+      assert.equal(service.get('content.0.isShown'), false);
+  });
 });

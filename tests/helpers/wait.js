@@ -1,10 +1,10 @@
 /* eslint-disable no-magic-numbers, no-useless-call */
 
-import Ember from 'ember';
+import { later, run, begin, end } from '@ember/runloop';
+
 import QUnit from 'qunit';
 
 const getNow = Date.now;
-const later = Ember.run.later;
 const error = 25;
 let delay;
 let now;
@@ -24,7 +24,7 @@ function mockLater(...values) {
 }
 
 function waitFor(count) {
-	const backburner = Ember.run.backburner;
+	const backburner = run.backburner;
 	let timers = backburner._timers.slice();
 	let debouncees = backburner._debouncees.map(([ctx, fn, time]) => [now + time, fn.bind(ctx)]);
 
@@ -52,7 +52,7 @@ function waitFor(count) {
 }
 
 function waitForNext() {
-	const backburner = Ember.run.backburner;
+	const backburner = run.backburner;
 
 	if (backburner._timers.length !== 0) {
 		let nextTimer;
@@ -75,17 +75,17 @@ function waitForNext() {
 }
 
 QUnit.moduleStart(() =>
-	Ember.run.cancelTimers()
+	run.cancelTimers()
 );
 
 QUnit.testStart(() => {
 	now = getNow();
 	delay = 0;
-	Ember.run.later = mockLater;
+	later = mockLater;
 });
 
 QUnit.testDone(() => {
-	Ember.run.later = later;
+	later = later;
 });
 
 /**
@@ -96,7 +96,7 @@ QUnit.testDone(() => {
  * @for Core.Testing
  */
 export default function wait(count) {
-	Ember.run.begin();
+	begin();
 
 	if (count) {
 		waitFor(count);
@@ -104,5 +104,5 @@ export default function wait(count) {
 		waitForNext();
 	}
 
-	Ember.run.end();
+	end();
 }
