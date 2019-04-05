@@ -1,0 +1,13 @@
+{{outlet}}
+
+{{#alert-container as |alert|}}
+	<p>{{alert.title}}</p>
+
+	<div data-id="alertDescription">{{alert.description}}</div>
+{{/alert-container}}
+
+<div id="openOk" {{action 'open' 'ok'}}>Open ok</div>
+<div id="openInfo" {{action 'open' 'info'}}>Open info</div>
+<div id="openAdvise" {{action 'open' 'advise'}}>Open advise</div>
+<div id="openWarning" {{action 'open' 'warning'}}>Open warning</div>
+<div id="openError" {{action 'open' 'error'}}>Open error</div>
