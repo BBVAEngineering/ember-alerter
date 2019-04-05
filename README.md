@@ -1,24 +1,36 @@
-# ember-alerter
+my-addon
+==============================================================================
 
 An [ember-cli addon](http://www.ember-cli.com/) for manage Alerts in Ember applications.
 
-## Install in ember-cli application
 
-In your application's directory:
+Compatibility
+------------------------------------------------------------------------------
 
-    ember install ember-alerter
+* Ember.js v2.18 or above
+* Ember CLI v2.13 or above
 
-## Usage
+
+Installation
+------------------------------------------------------------------------------
+
+```
+ember install ember-alerter
+```
+
+
+Usage
+------------------------------------------------------------------------------
 
 ```js
-alerter: Ember.inject.service(),
+alerter: service(),
 
 ...
 
 this.get('alerter').add({
   description: 'My message',
-  type: 'warning' // Alert type (optional, default: 'error')
-  duration: 6000 // Milliseconds (optional, default 4000)
+  title: 'Ooops!'
+  duration: 6000
 });
 ```
 
@@ -30,6 +42,14 @@ this.get('alerter').add({
 {{/alert-container}}
 ```
 
-## Contribute
 
-If you want to contribute to this addon, please read the [CONTRIBUTING.md](CONTRIBUTING.md).
+Contributing
+------------------------------------------------------------------------------
+
+See the [Contributing](CONTRIBUTING.md) guide for details.
+
+
+License
+------------------------------------------------------------------------------
+
+This project is licensed under the [MIT License](LICENSE.md).
