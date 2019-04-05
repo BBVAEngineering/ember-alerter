@@ -98,7 +98,9 @@ export default Service.extend({
 	 *
 	 * @method one
 	 */
-	one: aliasMethod('add'),
+	one() {
+		this.add(...arguments);
+	},
 
 	/**
 	 * Clean all alerts in the model.
