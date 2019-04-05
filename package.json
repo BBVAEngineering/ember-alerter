@@ -1,9 +1,11 @@
 {
   "name": "ember-alerter",
-  "version": "1.2.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "1.0.0",
+  "description": "An ember-cli addon to manage notifications.",
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "notifications",
+    "alerter",
   ],
   "license": "MIT",
   "author": "BBVAEngineering",
