@@ -19,5 +19,8 @@ module.exports = {
 		'inline-link-to': true,
 		'no-inline-styles': true,
 		'simple-unless': false
-	}
+	},
+	ignore: [
+		'tests/dummy/app/**'
+	]
 };

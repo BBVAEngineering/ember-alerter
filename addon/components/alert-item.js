@@ -1,4 +1,4 @@
-/* eslint-disable no-magic-numbers */
+/* eslint-disable ember/no-observers, no-magic-numbers */
 
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';

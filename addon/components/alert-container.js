@@ -1,4 +1,4 @@
-/* eslint-disable quote-props */
+/* eslint-disable ember/no-on-calls-in-components */
 
 import Component from '@ember/component';
 import layout from '../templates/components/alert-container';
