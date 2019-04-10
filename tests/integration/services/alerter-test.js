@@ -28,6 +28,18 @@ module('Integration | Service | alerter', (hooks) => {
 		run.cancelTimers();
 	});
 
+	test('it renders an alert with the method `one`', async(assert) => {
+		run(service, 'one', {
+			description: 'Foo',
+			type: 'error',
+			duration: 100
+		});
+
+		assert.dom('[data-alert-show="false"].alrtCont .error').exists('Alert is hidden');
+
+		await settled();
+	});
+
 	test('it renders and hide one alert', async(assert) => {
 		let $element;
 
