@@ -1,96 +1,91 @@
 /* eslint-disable no-magic-numbers */
-import { run } from '@ember/runloop';
+
 import EmberObject from '@ember/object';
-import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
 import sinon from 'sinon';
-import wait from 'dummy/tests/helpers/wait';
+import { module, test } from 'qunit';
+import { settled } from '@ember/test-helpers';
+import { setupTest } from 'ember-qunit';
 
-let component, model;
+module('Unit | Component | alert-item', (hooks) => {
+	setupTest(hooks);
 
-module('Unit | Component | alert-item', function(hooks) {
-  setupTest(hooks);
+	hooks.beforeEach(function() {
+		const model = EmberObject.create({
+			isShown: false
+		});
 
-  hooks.beforeEach(function() {
-      model = EmberObject.create({
-          isShown: false
-      });
+		const component = this.owner.factoryFor('component:alert-item').create({
+			alerter: { clear: sinon.spy() },
+			model
+		});
 
-      component = this.owner.factoryFor('component:alert-item').create({
-          alerter: { clear: sinon.spy() },
-          model
-      });
-  });
+		this.component = component;
+	});
 
-  test('it is not shown and is deleted when it is shown, it is not permanent and its duration expires', (assert) => {
-      run(component, 'set', 'model.isShown', true);
+	test('it is not shown and is deleted when it is shown, it is not permanent and its duration expires', async function(assert) {
+		this.component.set('model.isShown', true);
 
-      wait(4000);
+		await settled();
 
-      assert.equal(component.get('model.isShown'), false);
+		assert.equal(this.component.get('model.isShown'), false);
 
-      wait(500);
+		await settled();
 
-      assert.ok(component.get('alerter').clear.calledWith(component.get('model')));
-  });
+		assert.ok(this.component.get('alerter').clear.calledWith(this.component.get('model')));
+	});
 
-  test('it is shown when it is shown, it is permanent and its duration expires', (assert) => {
-      run(component, 'set', 'model.isPermanent', true);
-      run(component, 'set', 'model.isShown', true);
+	test('it is shown when it is shown, it is permanent and its duration expires', async function(assert) {
+		this.component.set('model.isPermanent', true);
+		this.component.set('model.isShown', true);
 
-      wait(4000);
+		await settled();
 
-      assert.equal(component.get('model.isShown'), true);
-  });
+		assert.equal(this.component.get('model.isShown'), true);
+	});
 
-  test('it does not break when it is shown and is destroyed', (assert) => {
-      assert.expect(0);
+	test('it does not break when it is shown and is destroyed', async function(assert) {
+		assert.expect(0);
 
-      run(component, 'set', 'model.isShown', true);
-      run(component, 'destroy');
+		this.component.set('model.isShown', true);
 
-      wait(4000);
-  });
+		await settled();
 
-  test('it does not break when it not is shown and is destroyed', (assert) => {
-      assert.expect(0);
+		this.component.destroy();
 
-      run(component, 'set', 'model.isShown', true);
+		await settled();
+	});
 
-      wait(4000);
+	test('it does not break when it not is shown and is destroyed', async function(assert) {
+		assert.expect(0);
 
-      run(component, 'destroy');
+		this.component.set('model.isShown', true);
 
-      wait(500);
-  });
+		await settled();
 
-  test('it disables visibility of the alert when clicked', (assert) => {
-      run(component, 'set', 'model.isShown', true);
+		this.component.destroy();
 
-      component.click();
+		await settled();
+	});
 
-      assert.equal(component.get('model.isShown'), false);
+	test('it disables visibility of the alert when clicked', function(assert) {
+		this.component.set('model.isShown', true);
 
-      component.click();
+		this.component.click();
 
-      assert.equal(component.get('model.isShown'), false);
-  });
+		assert.equal(this.component.get('model.isShown'), false);
 
-  test('it enables visibility of the alert when is rendered', function(assert) {
-      this.render();
+		this.component.click();
 
-      assert.equal(component.get('model.isShown'), false);
+		assert.equal(this.component.get('model.isShown'), false);
+	});
 
-      wait(500);
+	test('it does not enable visibility when it has no model', async function(assert) {
+		assert.expect(0);
 
-      assert.equal(component.get('model.isShown'), true);
-  });
+		this.component.set('model', null);
 
-  test('it does not enable visibility when it has no model', (assert) => {
-      assert.expect(0);
+		this.component.appendTo('#ember-testing');
 
-      run(component, 'set', 'model', null);
-
-      run(component, 'appendTo', '#ember-testing');
-  });
+		await settled();
+	});
 });

@@ -1,26 +1,19 @@
-import { find, visit } from '@ember/test-helpers';
-import $ from 'jquery';
 import { module, test } from 'qunit';
-
 import { setupApplicationTest } from 'ember-qunit';
+import { settled, find, visit } from '@ember/test-helpers';
 
-module('Acceptance | alerter', function(hooks) {
-  setupApplicationTest(hooks);
+module('Acceptance | alerter', (hooks) => {
+	setupApplicationTest(hooks);
 
-  test('Opening an alert. All types', async assert => {
-      await visit('/');
+	test('Opening an alert', async(assert) => {
+		await visit('/');
 
-      const alrtCont = 'div.alrtCont div[data-id="alertDescription"]';
+		const button = await find('#openOk');
 
-      $('#openOk').click();
-      assert.dom(alrtCont).hasText('Alert of type ok');
-      $('#openInfo').click();
-      assert.dom(alrtCont).hasText('Alert of type info');
-      $('#openAdvise').click();
-      assert.dom(alrtCont).hasText('Alert of type advise');
-      $('#openWarning').click();
-      assert.dom(alrtCont).hasText('Alert of type warning');
-      $('#openError').click();
-      assert.dom(alrtCont).hasText('Alert of type error');
-  });
+		button.click();
+
+		assert.dom('div.alrtCont div[data-id="alertDescription"]').hasText('Alert of type ok');
+
+		await settled();
+	});
 });

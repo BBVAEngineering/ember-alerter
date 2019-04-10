@@ -1,15 +1,14 @@
 /* eslint-disable no-magic-numbers, max-statements */
-import $ from 'jquery';
+
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'dummy/tests/helpers/wait';
 import { module, test } from 'qunit';
-import { render } from '@ember/test-helpers';
+import { waitFor, settled, render } from '@ember/test-helpers';
 import { run } from '@ember/runloop';
 import { setupRenderingTest } from 'ember-qunit';
 
 let service;
 
-module('Integration | Service | alerter', function(hooks) {
+module('Integration | Service | alerter', (hooks) => {
 	setupRenderingTest(hooks);
 
 	hooks.beforeEach(async function() {
@@ -24,101 +23,78 @@ module('Integration | Service | alerter', function(hooks) {
       `);
 	});
 
-	hooks.afterEach(function() {
+	hooks.afterEach(() => {
 		run(service.get('content'), 'clear');
 		run.cancelTimers();
 	});
 
-	function find(query) {
-		return $(query);
-	}
-
-	test('it renders and hide one alert', (assert) => {
+	test('it renders and hide one alert', async(assert) => {
 		let $element;
 
 		run(service, 'add', {
 			description: 'Foo',
-			type: 'error'
+			type: 'error',
+			duration: 100
 		});
 
-		$element = find('[data-alert-show="false"].alrtCont .error');
+		assert.dom('[data-alert-show="false"].alrtCont .error').exists('Alert is hidden');
 
-		assert.equal($element.length, 1, 'Alert is hidden');
+		$element = await waitFor('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
 
-		wait(500);
+		assert.dom($element).hasText('Foo', 'Alert is shown');
 
-		$element = find('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
+		$element = await waitFor('[data-alert-show="false"].alrtCont .error', { timeout: 10000 });
 
-		assert.equal($element.text().trim(), 'Foo', 'Alert is shown');
+		assert.ok($element, 'Alert is hidden again');
 
-		wait(4000);
+		await settled();
 
-		$element = find('[data-alert-show="false"].alrtCont .error');
-
-		assert.equal($element.length, 1, 'Alert is hidden again');
-
-		wait(500);
-
-		$element = find('.alrtCont .error');
-
-		assert.equal($element.length, 0, 'Alert is removed from DOM');
+		assert.dom('.alrtCont .error').doesNotExist('Alert is removed from DOM');
 	});
 
-	test('it renders secuentially multiple alerts', (assert) => {
+	test('it renders secuentially multiple alerts', async(assert) => {
 		let $element;
 
 		run(service, 'add', [{
-			duration: 5000,
+			duration: 200,
 			description: 'Foo',
 			type: 'error'
 		}, {
-			duration: 1000,
+			duration: 100,
 			description: 'Bar',
 			type: 'error'
 		}]);
 
-		$element = find('[data-alert-show="false"].alrtCont .error');
+		$element = await waitFor('[data-alert-show="false"].alrtCont .error');
 
-		assert.equal($element.length, 1, 'First alert is hidden');
+		assert.ok($element, 'First alert is hidden');
 
-		wait(500);
+		$element = await waitFor('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
 
-		$element = find('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
+		assert.dom($element).hasText('Bar', 'First alert is displayed');
 
-		assert.equal($element.text().trim(), 'Bar', 'First alert is displayed');
+		$element = await waitFor('[data-alert-show="false"].alrtCont .error');
 
-		wait(1000);
+		assert.ok($element, 'First alert is hidden again');
 
-		$element = find('[data-alert-show="false"].alrtCont .error');
+		$element = await waitFor('[data-alert-show="false"].alrtCont .error');
 
-		assert.equal($element.length, 1, 'First alert is hidden again');
+		assert.ok($element, 'Second alert is hidden');
 
-		wait(500);
+		$element = await waitFor('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
 
-		$element = find('[data-alert-show="false"].alrtCont .error');
+		assert.dom($element).hasText('Foo', 'Second alert is displayed');
 
-		assert.equal($element.length, 1, 'Second alert is hidden');
+		$element = await waitFor('[data-alert-show="false"].alrtCont .error', { timeout: 10000 });
 
-		wait(500);
+		assert.ok($element, 'Second alert is hidden again');
 
-		$element = find('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
+		await settled();
 
-		assert.equal($element.text().trim(), 'Foo', 'Second alert is displayed');
-
-		wait(5000);
-
-		$element = find('[data-alert-show="false"].alrtCont .error');
-
-		assert.equal($element.length, 1, 'Second alert is hidden again');
-
-		wait(500);
-
-		$element = find('.alrtCont .error');
-
-		assert.equal($element.length, 0, 'There is no alert');
+		assert.dom('.alrtCont .error').doesNotExist('Alert is removed from DOM');
 	});
 
-	test('it renders permanent alert', (assert) => {
+	test('it renders permanent alert', async(assert) => {
 		let $element;
 
 		run(service, 'add', {
@@ -127,148 +103,118 @@ module('Integration | Service | alerter', function(hooks) {
 			type: 'error'
 		});
 
-		$element = find('[data-alert-show="false"].alrtCont .error');
+		$element = await waitFor('[data-alert-show="false"].alrtCont .error');
 
-		assert.equal($element.length, 1, 'First alert is hidden');
+		assert.ok($element, 'First alert is hidden');
 
-		wait(500);
+		$element = await waitFor('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
 
-		$element = find('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
+		assert.dom($element).hasText('Foo', 'First alert is displayed');
 
-		assert.equal($element.text().trim(), 'Foo', 'First alert is displayed');
+		await settled();
 
-		wait(10000);
-
-		$element = find('[data-alert-show="false"].alrtCont .error');
-
-		assert.equal($element.length, 0, 'First alert is still displayed');
+		assert.dom('[data-alert-show="false"].alrtCont .error').doesNotExist('First alert is still displayed');
 
 		run(service, 'add', {
 			description: 'Bar',
-			duration: 2000,
+			duration: 1000,
 			type: 'error'
 		});
 
-		$element = find('[data-alert-show="false"].alrtCont .error');
+		$element = await waitFor('[data-alert-show="false"].alrtCont .error');
 
-		assert.equal($element.length, 1, 'Second alert is hidden');
+		assert.ok($element, 'Second alert is hidden');
 
-		wait(500);
+		$element = await waitFor('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
 
-		$element = find('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
+		assert.dom($element).hasText('Bar', 'Second alert is displayed');
 
-		assert.equal($element.text().trim(), 'Bar', 'Second alert is displayed');
+		$element = await waitFor('[data-alert-show="false"].alrtCont .error', { timeout: 10000 });
 
-		wait(2000);
+		assert.ok($element, 'Second alert is hidden again');
 
-		$element = find('[data-alert-show="false"].alrtCont .error');
+		$element = await waitFor('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
 
-		assert.equal($element.length, 1, 'Second alert is hidden again');
-
-		wait(500);
-
-		$element = find('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
-
-		assert.equal($element.text().trim(), 'Foo', 'First alert is visible again');
+		assert.dom($element).hasText('Foo', 'First alert is visible again');
 	});
 
-	test('it renders second alert when the first disapears', (assert) => {
+	test('it renders second alert when the first disapears', async(assert) => {
 		let $element;
 
-		run(service, 'add', {
-			duration: 5000,
+		service.add({
+			duration: 50,
 			description: 'Foo',
-			type: 'error'
+			type: 'error1'
 		});
 
-		$element = find('[data-alert-show="false"].alrtCont .error');
+		$element = await waitFor('[data-alert-show="false"].alrtCont .error1');
 
-		assert.equal($element.length, 1, 'First alert is hidden.');
+		assert.ok($element, 'First alert is hidden.');
 
-		wait(500);
-
-		run(service, 'add', {
-			duration: 1000,
+		service.add({
+			duration: 100,
 			description: 'Bar',
-			type: 'error'
+			type: 'error2'
 		});
 
-		$element = find('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
+		$element = await waitFor('[data-alert-show="true"].alrtCont .error1 [data-id="alertDescription"]', { timeout: 10000 });
 
-		assert.equal($element.text().trim(), 'Foo', 'First alert is shown.');
+		assert.dom($element).hasText('Foo', 'First alert is shown');
 
-		wait(500);
+		$element = await waitFor('[data-alert-show="true"].alrtCont .error1 [data-id="alertDescription"]');
 
-		$element = find('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
+		assert.dom($element).hasText('Foo', 'First alert is still shown');
 
-		assert.equal($element.text().trim(), 'Foo', 'First alert is still shown.');
+		$element = await waitFor('[data-alert-show="false"].alrtCont .error1', { timeout: 10000 });
 
-		wait(4000);
+		assert.ok($element, 'First alert is hidden again.');
 
-		$element = find('[data-alert-show="false"].alrtCont .error');
+		$element = await waitFor('[data-alert-show="false"].alrtCont .error2', { timeout: 10000 });
 
-		assert.equal($element.length, 1, 'First alert is hidden again.');
+		assert.ok($element, 'Second alert is hidden.');
 
-		wait(500);
+		$element = await waitFor('[data-alert-show="true"].alrtCont .error2 [data-id="alertDescription"]');
 
-		$element = find('[data-alert-show="false"].alrtCont .error');
+		assert.dom($element).hasText('Bar', 'Second alert is shown.', { timeout: 10000 });
 
-		assert.equal($element.length, 1, 'Second alert is hidden.');
+		$element = await waitFor('[data-alert-show="false"].alrtCont .error2');
 
-		wait(500);
+		assert.ok($element, 'Second alert is hidden.');
 
-		$element = find('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
+		await settled();
 
-		assert.equal($element.text().trim(), 'Bar', 'Second alert is shown.');
-
-		wait(1000);
-
-		$element = find('[data-alert-show="false"].alrtCont .error');
-
-		assert.equal($element.length, 1, 'Second alert is hidden.');
-
-		wait(500);
-
-		$element = find('.alrtCont .error');
-
-		assert.equal($element.length, 0, 'All alerts are deleted.');
+		assert.dom('.alrtCont .error').doesNotExist('All alerts are deleted.');
 	});
 
-	test('it cleans alerts', (assert) => {
+	test('it cleans alerts', async(assert) => {
 		let $element;
 
 		run(service, 'add', [{
-			duration: 5000,
+			duration: 500,
 			description: 'Foo',
 			type: 'error'
 		}, {
-			duration: 4000,
+			duration: 400,
 			description: 'Bar',
 			type: 'error'
 		}, {
-			duration: 6000,
+			duration: 600,
 			description: 'Wow',
 			type: 'error'
 		}]);
 
-		wait(500);
+		$element = await waitFor('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
 
-		$element = find('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
-
-		assert.equal($element.text().trim(), 'Bar', 'Alert is displayed');
+		assert.dom($element).hasText('Bar', 'Alert is displayed');
 
 		run(service, 'clear');
 
-		wait(500);
+		$element = await waitFor('[data-alert-show="false"].alrtCont .error');
 
-		$element = find('[data-alert-show="false"].alrtCont .error');
+		assert.ok($element, 'Alert is hidden.');
 
-		assert.equal($element.length, 1, 'Alert is hidden.');
+		await settled();
 
-		wait(500);
-
-		$element = find('.alrtCont .error');
-
-		assert.equal($element.length, 0, 'All alerts are deleted');
+		assert.dom('.alrtCont .error').doesNotExist('All alerts are deleted.');
 	});
 });
