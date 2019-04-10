@@ -55,7 +55,9 @@ export default Component.extend({
 	 * @type Boolean
 	 */
 	'data-alert-show': computed('currentAlert.isShown', function() {
-		return String(this.get('currentAlert.isShown'));
+		const isShown = this.get('currentAlert.isShown');
+
+		return String(isShown);
 	}),
 
 	/**

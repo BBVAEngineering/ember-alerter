@@ -6,8 +6,4 @@
 	<div data-id="alertDescription">{{alert.description}}</div>
 {{/alert-container}}
 
-<div role="button" id="openOk" {{action "open" "ok"}}>Open ok</div>
-<div role="button" id="openInfo" {{action "open" "info"}}>Open info</div>
-<div role="button" id="openAdvise" {{action "open" "advise"}}>Open advise</div>
-<div role="button" id="openWarning" {{action "open" "warning"}}>Open warning</div>
-<div role="button" id="openError" {{action "open" "error"}}>Open error</div>
+<input type="button" id="openOk" {{action "open" "ok"}} value="Open ok">
