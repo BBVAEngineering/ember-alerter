@@ -43,7 +43,7 @@
     "broccoli-caching-writer": "^3.0.3",
     "commitizen": "^3.0.7",
     "cz-conventional-changelog": "^2.1.0",
-    "ember-cli": "~3.8.1",
+    "ember-cli": "^3.9.0",
     "ember-cli-code-coverage": "^1.0.0-beta.8",
     "ember-cli-dependency-checker": "^3.1.0",
     "ember-cli-eslint": "^5.1.0",
@@ -72,7 +72,7 @@
     "json": "^9.0.6",
     "loader.js": "^4.7.0",
     "qunit-dom": "^0.8.0",
-    "semantic-release": "^15.13.3"
+    "semantic-release": "^15.13.8"
   },
   "engines": {
     "node": "6.* || 8.* || >= 10.*"
