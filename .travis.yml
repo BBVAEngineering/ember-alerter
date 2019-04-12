@@ -3,6 +3,7 @@ language: node_js
 sudo: false
 dist: trusty
 node_js: 'stable'
+useYarn: true
 
 addons:
   chrome: stable
