@@ -29,7 +29,7 @@ module('Integration | Component | alert-container', (hooks) => {
 		const serviceView = this.get('alerter.views.0');
 
 		assert.ok(this.get('alerter.views.length') === 1, 'The alert-container adds itself in the service');
-		assert.ok(serviceView._target === this, 'The added element is the current alert-container');
+		assert.ok((serviceView._target || serviceView._targetObject) === this, 'The added element is the current alert-container');
 
 		await clearRender();
 
