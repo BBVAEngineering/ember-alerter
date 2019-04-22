@@ -41,14 +41,6 @@ export default Component.extend({
 	attributeBindings: ['data-alert-show'],
 
 	/**
-	 * HTML Class bindings.
-	 *
-	 * @property classNameBindings
-	 * @type Array
-	 */
-	classNameBindings: ['currentAlert.isPermanent:relative'],
-
-	/**
 	 * Compute data-alert-show property.
 	 *
 	 * @property data-alert-show
