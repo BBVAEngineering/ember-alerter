@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/BBVAEngineering/ember-alerter/compare/v2.0.0...v2.0.1) (2019-04-22)
+
+
+### Bug Fixes
+
+* **package:** remove private property ([a758fe0](https://github.com/BBVAEngineering/ember-alerter/commit/a758fe0))
+
 # [2.0.0](https://github.com/BBVAEngineering/ember-alerter/compare/v1.0.0...v2.0.0) (2019-04-22)
 
 
