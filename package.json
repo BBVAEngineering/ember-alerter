@@ -1,6 +1,6 @@
 {
   "name": "ember-alerter",
-  "version": "0.0.0-development",
+  "version": "1.0.0",
   "description": "An ember-cli addon to manage notifications.",
   "keywords": [
     "ember-addon",
