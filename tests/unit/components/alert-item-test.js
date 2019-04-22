@@ -3,6 +3,7 @@
 import EmberObject from '@ember/object';
 import sinon from 'sinon';
 import { module, test } from 'qunit';
+import { run } from '@ember/runloop';
 import { settled } from '@ember/test-helpers';
 import { setupTest } from 'ember-qunit';
 
@@ -50,7 +51,7 @@ module('Unit | Component | alert-item', (hooks) => {
 
 		await settled();
 
-		this.component.destroy();
+		run(this.component, 'destroy');
 
 		await settled();
 	});
@@ -62,7 +63,7 @@ module('Unit | Component | alert-item', (hooks) => {
 
 		await settled();
 
-		this.component.destroy();
+		run(this.component, 'destroy');
 
 		await settled();
 	});
