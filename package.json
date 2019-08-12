@@ -32,7 +32,7 @@
     "validate-coverage": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0"
   },
   "dependencies": {
-    "ember-cli-babel": "^7.1.2",
+    "ember-cli-babel": "^7.9.0",
     "ember-cli-htmlbars": "^3.0.0"
   },
   "devDependencies": {
