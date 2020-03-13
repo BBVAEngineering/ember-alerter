@@ -43,7 +43,7 @@ jobs:
         - codecov --file=coverage/lcov.info
 
     - stage: "Regression Tests"
-    - env: EMBER_TRY_SCENARIO=ember-lts-3.12
+      env: EMBER_TRY_SCENARIO=ember-lts-3.12
     - env: EMBER_TRY_SCENARIO=ember-lts-3.16
     - env: EMBER_TRY_SCENARIO=ember-release
     - env: EMBER_TRY_SCENARIO=ember-beta
