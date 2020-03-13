@@ -44,6 +44,6 @@ module('Integration | Component | alert-container', (hooks) => {
 
 		await render(hbs `{{alert-container alerter=alerter}}`);
 
-		assert.dom('div.alrtCont').hasAttribute('data-alert-show', 'false');
+		assert.equal(this.element.querySelector('div.alrtCont').getAttribute('data-alert-show'), 'false');
 	});
 });

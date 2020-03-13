@@ -1,9 +1,9 @@
 {{outlet}}
 
-{{#alert-container as |alert|}}
+<AlertContainer as |alert|>
 	<p>{{alert.title}}</p>
 
 	<div data-id="alertDescription">{{alert.description}}</div>
-{{/alert-container}}
+</AlertContainer>
 
-<input type="button" id="openOk" {{action "open" "ok"}} value="Open ok">
+<input type="button" id="openOk" {{on 'click' (fn this.open 'ok')}} value="Open ok">

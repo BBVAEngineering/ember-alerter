@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = {
 	extends: 'octane',
 	rules: {
@@ -19,8 +17,5 @@ module.exports = {
 		'inline-link-to': true,
 		'no-inline-styles': true,
 		'simple-unless': false
-	},
-	ignore: [
-		'tests/dummy/app/**'
-	]
+	}
 };

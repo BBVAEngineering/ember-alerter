@@ -28,19 +28,19 @@ module('Integration | Service | alerter', (hooks) => {
 		run.cancelTimers();
 	});
 
-	test('it renders an alert with the method `one`', async(assert) => {
+	test('it renders an alert with the method `one`', async function(assert) {
 		run(service, 'one', {
 			description: 'Foo',
 			type: 'error',
 			duration: 100
 		});
 
-		assert.dom('[data-alert-show="false"].alrtCont .error').exists('Alert is hidden');
+		assert.ok(this.element.querySelector('[data-alert-show="false"].alrtCont .error'), 'Alert is hidden');
 
 		await settled();
 	});
 
-	test('it renders and hide one alert', async(assert) => {
+	test('it renders and hide one alert', async function(assert) {
 		let $element;
 
 		run(service, 'add', {
@@ -49,11 +49,11 @@ module('Integration | Service | alerter', (hooks) => {
 			duration: 100
 		});
 
-		assert.dom('[data-alert-show="false"].alrtCont .error').exists('Alert is hidden');
+		assert.ok(this.element.querySelector('[data-alert-show="false"].alrtCont .error'), 'Alert is hidden');
 
 		$element = await waitFor('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
 
-		assert.dom($element).hasText('Foo', 'Alert is shown');
+		assert.equal($element.textContent.trim(), 'Foo', 'Alert is shown');
 
 		$element = await waitFor('[data-alert-show="false"].alrtCont .error', { timeout: 10000 });
 
@@ -61,10 +61,10 @@ module('Integration | Service | alerter', (hooks) => {
 
 		await settled();
 
-		assert.dom('.alrtCont .error').doesNotExist('Alert is removed from DOM');
+		assert.notOk(this.element.querySelector('.alrtCont .error'), 'Alert is removed from DOM');
 	});
 
-	test('it renders secuentially multiple alerts', async(assert) => {
+	test('it renders secuentially multiple alerts', async function(assert) {
 		let $element;
 
 		run(service, 'add', [{
@@ -83,7 +83,7 @@ module('Integration | Service | alerter', (hooks) => {
 
 		$element = await waitFor('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
 
-		assert.dom($element).hasText('Bar', 'First alert is displayed');
+		assert.equal($element.textContent.trim(), 'Bar', 'First alert is displayed');
 
 		$element = await waitFor('[data-alert-show="false"].alrtCont .error');
 
@@ -95,7 +95,7 @@ module('Integration | Service | alerter', (hooks) => {
 
 		$element = await waitFor('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
 
-		assert.dom($element).hasText('Foo', 'Second alert is displayed');
+		assert.equal($element.textContent.trim(), 'Foo', 'Second alert is displayed');
 
 		$element = await waitFor('[data-alert-show="false"].alrtCont .error', { timeout: 10000 });
 
@@ -103,10 +103,10 @@ module('Integration | Service | alerter', (hooks) => {
 
 		await settled();
 
-		assert.dom('.alrtCont .error').doesNotExist('Alert is removed from DOM');
+		assert.notOk(this.element.querySelector('.alrtCont .error'), 'Alert is removed from DOM');
 	});
 
-	test('it renders permanent alert', async(assert) => {
+	test('it renders permanent alert', async function(assert) {
 		let $element;
 
 		run(service, 'add', {
@@ -121,11 +121,11 @@ module('Integration | Service | alerter', (hooks) => {
 
 		$element = await waitFor('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
 
-		assert.dom($element).hasText('Foo', 'First alert is displayed');
+		assert.equal($element.textContent.trim(), 'Foo', 'First alert is displayed');
 
 		await settled();
 
-		assert.dom('[data-alert-show="false"].alrtCont .error').doesNotExist('First alert is still displayed');
+		assert.notOk(this.element.querySelector('[data-alert-show="false"].alrtCont .error'), 'First alert is still displayed');
 
 		run(service, 'add', {
 			description: 'Bar',
@@ -139,7 +139,7 @@ module('Integration | Service | alerter', (hooks) => {
 
 		$element = await waitFor('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
 
-		assert.dom($element).hasText('Bar', 'Second alert is displayed');
+		assert.equal($element.textContent.trim(), 'Bar', 'Second alert is displayed');
 
 		$element = await waitFor('[data-alert-show="false"].alrtCont .error', { timeout: 10000 });
 
@@ -147,10 +147,10 @@ module('Integration | Service | alerter', (hooks) => {
 
 		$element = await waitFor('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
 
-		assert.dom($element).hasText('Foo', 'First alert is visible again');
+		assert.equal($element.textContent.trim(), 'Foo', 'First alert is visible again');
 	});
 
-	test('it renders second alert when the first disapears', async(assert) => {
+	test('it renders second alert when the first disapears', async function(assert) {
 		let $element;
 
 		service.add({
@@ -171,11 +171,11 @@ module('Integration | Service | alerter', (hooks) => {
 
 		$element = await waitFor('[data-alert-show="true"].alrtCont .error1 [data-id="alertDescription"]', { timeout: 10000 });
 
-		assert.dom($element).hasText('Foo', 'First alert is shown');
+		assert.equal($element.textContent.trim(), 'Foo', 'First alert is shown');
 
 		$element = await waitFor('[data-alert-show="true"].alrtCont .error1 [data-id="alertDescription"]');
 
-		assert.dom($element).hasText('Foo', 'First alert is still shown');
+		assert.equal($element.textContent.trim(), 'Foo', 'First alert is still shown');
 
 		$element = await waitFor('[data-alert-show="false"].alrtCont .error1', { timeout: 10000 });
 
@@ -187,7 +187,7 @@ module('Integration | Service | alerter', (hooks) => {
 
 		$element = await waitFor('[data-alert-show="true"].alrtCont .error2 [data-id="alertDescription"]');
 
-		assert.dom($element).hasText('Bar', 'Second alert is shown.', { timeout: 10000 });
+		assert.equal($element.textContent.trim(), 'Bar', 'Second alert is shown.', { timeout: 10000 });
 
 		$element = await waitFor('[data-alert-show="false"].alrtCont .error2');
 
@@ -195,10 +195,10 @@ module('Integration | Service | alerter', (hooks) => {
 
 		await settled();
 
-		assert.dom('.alrtCont .error').doesNotExist('All alerts are deleted.');
+		assert.notOk(this.element.querySelector('.alrtCont .error'), 'All alerts are deleted.');
 	});
 
-	test('it cleans alerts', async(assert) => {
+	test('it cleans alerts', async function(assert) {
 		let $element;
 
 		run(service, 'add', [{
@@ -217,7 +217,7 @@ module('Integration | Service | alerter', (hooks) => {
 
 		$element = await waitFor('[data-alert-show="true"].alrtCont .error [data-id="alertDescription"]');
 
-		assert.dom($element).hasText('Bar', 'Alert is displayed');
+		assert.equal($element.textContent.trim(), 'Bar', 'Alert is displayed');
 
 		run(service, 'clear');
 
@@ -227,6 +227,6 @@ module('Integration | Service | alerter', (hooks) => {
 
 		await settled();
 
-		assert.dom('.alrtCont .error').doesNotExist('All alerts are deleted.');
+		assert.notOk(this.element.querySelector('.alrtCont .error'), 'All alerts are deleted.');
 	});
 });

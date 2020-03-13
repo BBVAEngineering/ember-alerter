@@ -9,7 +9,8 @@ module.exports = {
     }
   },
   plugins: [
-    'ember'
+    'ember',
+		'bbva'
   ],
   extends: [
     'eslint:recommended',
@@ -52,7 +53,7 @@ module.exports = {
       },
       plugins: ['node'],
       rules: Object.assign({}, require('eslint-plugin-node').configs.recommended.rules, {
-        // add your custom rules and overrides for node files here
+        'no-process-env': 0
       })
     }
   ]

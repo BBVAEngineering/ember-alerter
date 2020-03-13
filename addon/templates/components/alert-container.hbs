@@ -1,5 +1,5 @@
-{{#if currentAlert}}
-	{{#alert-item model=currentAlert}}
-		{{yield currentAlert}}
-	{{/alert-item}}
+{{#if this.currentAlert}}
+	<AlertItem @model={{this.currentAlert}}>
+		{{yield this.currentAlert}}
+	</AlertItem>
 {{/if}}
