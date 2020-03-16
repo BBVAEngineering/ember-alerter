@@ -10,12 +10,12 @@ module.exports = {
   },
   plugins: [
     'ember',
-		'bbva'
+    'bbva'
   ],
   extends: [
     'eslint:recommended',
     'plugin:ember/recommended',
-		'eslint-config-bbva'
+    'eslint-config-bbva'
   ],
   env: {
     browser: true
@@ -27,8 +27,8 @@ module.exports = {
     // node files
     {
       files: [
-				'.huskyrc.js',
-				'.commitlintrc.js',
+        '.huskyrc.js',
+        '.commitlintrc.js',
         '.eslintrc.js',
         '.template-lintrc.js',
         'ember-cli-build.js',

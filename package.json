@@ -21,7 +21,7 @@
     "build": "ember build --environment=production",
     "start": "ember serve",
     "test": "COVERAGE=true ember test",
-    "check-coverage": "istanbul check-coverage coverage/coverage-final.json --statements 96 --functions 90 --branches 90 --lines 96",
+    "check-coverage": "istanbul check-coverage coverage/coverage-final.json --statements 100 --functions 100 --branches 100 --lines 100",
     "commit": "git-cz",
     "lint": "npm run lint:js && npm run lint:hbs",
     "lint:js": "eslint --max-warnings 0 ./*.js addon app config tests",
