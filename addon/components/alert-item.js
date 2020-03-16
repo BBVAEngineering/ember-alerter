@@ -39,6 +39,7 @@ export default Component.extend({
 			// If is shown, run timer to not show.
 			if (!this.get('model.isPermanent')) {
 				later(this, function() {
+					/* istanbul ignore else  */
 					if (!this.isDestroyed) {
 						this.set('model.isShown', false);
 					}
@@ -78,6 +79,7 @@ export default Component.extend({
 
 		// If is first time show alert.
 		later(this, function() {
+			/* istanbul ignore else  */
 			if (!this.isDestroyed && this.get('model')) {
 				this.set('model.isShown', true);
 			}

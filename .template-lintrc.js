@@ -1,7 +1,5 @@
-'use strict';
-
 module.exports = {
-	extends: 'recommended',
+	extends: 'octane',
 	rules: {
 		'no-bare-strings': true,
 		'block-indentation': 'tab',
@@ -19,8 +17,5 @@ module.exports = {
 		'inline-link-to': true,
 		'no-inline-styles': true,
 		'simple-unless': false
-	},
-	ignore: [
-		'tests/dummy/app/**'
-	]
+	}
 };

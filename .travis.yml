@@ -1,10 +1,8 @@
 ---
 language: node_js
+os: linux
 node_js: stable
-sudo: false
 dist: trusty
-
-useYarn: true
 
 addons:
   chrome: stable
@@ -18,7 +16,6 @@ env:
     - JOBS=1
 
 jobs:
-  fail_fast: true
   allow_failures:
     - env: EMBER_TRY_SCENARIO=ember-canary
 
@@ -26,6 +23,7 @@ jobs:
     - stage: "Tests"
       before_install:
         - npm config set spin false
+        - npm install -g npm@6
         - npm install -g codecov
         - npm install -g greenkeeper-lockfile@1
         - npm install -g @commitlint/travis-cli
@@ -45,8 +43,8 @@ jobs:
         - codecov --file=coverage/lcov.info
 
     - stage: "Regression Tests"
-      env: EMBER_TRY_SCENARIO=ember-lts-2.18
-    - env: EMBER_TRY_SCENARIO=ember-lts-3.4
+      env: EMBER_TRY_SCENARIO=ember-lts-3.12
+    - env: EMBER_TRY_SCENARIO=ember-lts-3.16
     - env: EMBER_TRY_SCENARIO=ember-release
     - env: EMBER_TRY_SCENARIO=ember-beta
     - env: EMBER_TRY_SCENARIO=ember-canary
@@ -57,17 +55,15 @@ jobs:
       deploy:
         provider: script
         skip_cleanup: true
-        before_script:
-          - npm uninstall husky
-        script:
-          - npx semantic-release
+        script: npx semantic-release
 
 before_install:
   - npm config set spin false
+  - npm install -g npm@6
   - npm --version
 
 script:
-  - COVERAGE=true node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
+  - node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO
 
 stages:
   - "Tests"

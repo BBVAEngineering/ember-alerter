@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { settled, find, visit } from '@ember/test-helpers';
+import { waitFor, settled, visit, click } from '@ember/test-helpers';
 
 module('Acceptance | alerter', (hooks) => {
 	setupApplicationTest(hooks);
@@ -8,11 +8,11 @@ module('Acceptance | alerter', (hooks) => {
 	test('Opening an alert', async(assert) => {
 		await visit('/');
 
-		const button = await find('#openOk');
+		click('#openOk');
 
-		button.click();
+		const $element = await waitFor('div.alrtCont div[data-id="alertDescription"]');
 
-		assert.dom('div.alrtCont div[data-id="alertDescription"]').hasText('Alert of type ok');
+		assert.equal($element.textContent.trim(), 'Alert of type ok');
 
 		await settled();
 	});
